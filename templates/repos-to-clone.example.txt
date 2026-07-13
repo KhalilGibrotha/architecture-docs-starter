@@ -1,0 +1,4 @@
+# URL [destination relative to workspace-repos/] [optional branch]
+https://github.com/KhalilGibrotha/dac-toolkit dac-toolkit develop
+https://github.com/<your-org>/architecture-docs-starter architecture-docs-starter main
+

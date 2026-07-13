@@ -191,6 +191,10 @@ That gives authors:
 - shared rendering tooling in another repo
 - a predictable `build/` and `exports/` model across projects
 
+See [docs/devspaces-bootstrap-example.md](docs/devspaces-bootstrap-example.md) for a fuller example and
+[templates/repos-to-clone.example.txt](templates/repos-to-clone.example.txt) for a ready-to-copy
+bootstrap list.
+
 ## Publishing Guidance
 
 Before publishing this starter for wider reuse:
