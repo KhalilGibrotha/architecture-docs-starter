@@ -36,28 +36,50 @@ This starter is intended to stay public-safe:
 
 ## Document Generation Workflow
 
-This is a content repository. The document builder lives in `dac-toolkit`.
+This is a content repository. The document builder and manifest wrapper live in
+`dac-toolkit`.
 
-### Setup
+### First-Time Setup
+
+Clone both repositories side by side:
 
 ```bash
-# Clone both repos side by side
 git clone https://github.com/KhalilGibrotha/dac-toolkit.git
-git clone <your-org>/<this-repo>.git
-
-# Install the builder
-(cd dac-toolkit/docx_builder && pip install -e .)
-
-# Sync Vale packages once per clone
-(cd <this-repo> && vale sync)
+git clone https://github.com/<your-org>/<your-content-repo>.git
 ```
 
-### Build all manifest-managed documents
+Your local layout should look like this:
 
-Run from the parent directory that contains both repos:
+```text
+.
+|-- dac-toolkit/
+`-- <your-content-repo>/
+```
+
+From the content repo root, update these files before your first render:
+
+- `vars/org.yaml`
+- `assets/logo/logo.png` if you want a cover-page logo
+- `manifests/render-manifest.yaml`
+
+Then sync prose-lint packages once per clone:
 
 ```bash
-cd <this-repo>
+cd <your-content-repo>
+vale sync
+```
+
+You do not need a global `docx-build` install for the manifest workflow.
+The wrapper in `dac-toolkit` creates a local virtual environment and installs
+the builder there when needed.
+
+### First Working Commands
+
+Run these from the content repo root:
+
+```bash
+make docx-list
+make docx-validate
 make docx-render-all
 ```
 
@@ -71,11 +93,20 @@ This uses the toolkit-owned manifest wrapper through the starter `Makefile`.
 It keeps the command surface inside the content repo while still resolving the
 tooling from the sibling `dac-toolkit` clone.
 
-### Build a single document
+### Build a Single Manifest Document
+
+```bash
+make docx-render-one DOC_ID=architecture-overview
+```
+
+### Direct Builder Example
+
+If you want to bypass the manifest and test one source file directly:
 
 ```bash
 docx-build docs/example_architecture-overview.md \
   --org vars/org.yaml \
+  --logo assets/logo/logo.png \
   --output exports/example_architecture-overview.docx
 ```
 
@@ -122,9 +153,18 @@ Example selective render pattern:
 
 ```bash
 make docx-list
+make docx-validate
 make docx-render-one DOC_ID=architecture-overview
 make docx-render-all
 ```
+
+## What the Make Targets Do
+
+- `make docx-list` shows manifest document IDs, source files, and outputs
+- `make docx-validate` runs manifest and render preflight checks without writing final DOCX artifacts
+- `make docx-render-one DOC_ID=<id>` renders one manifest entry
+- `make docx-render-all` renders every manifest entry
+- `make vale-bootstrap` syncs Vale packages for prose linting
 
 ## Where Things Go
 
@@ -155,13 +195,94 @@ make docx-render-all
 - Keep repository-wide organization metadata in `vars/org.yaml`.
 - Use templates from `templates/` as your starting point rather than copying old published documents.
 
+## Day-to-Day Author Workflow
+
+### 1. Start from the latest base branch
+
+Teams usually branch from `main` or `develop`. Use whichever branch your team
+has chosen as the content integration branch.
+
+Example using `main`:
+
+```bash
+git checkout main
+git pull
+```
+
+If your team uses `develop` instead:
+
+```bash
+git checkout develop
+git pull
+```
+
+### 2. Create a Jira-key feature branch
+
+Use a branch name that starts with the Jira key and a short description:
+
+```bash
+git checkout -b feature/ARCH-1234-reference-zone-model
+```
+
+### 3. Create or update document content
+
+Typical author steps:
+
+1. Copy a template from `templates/`.
+2. Rename the file for the document you are writing.
+3. Update front matter.
+4. Add or update the manifest entry in `manifests/render-manifest.yaml`.
+5. Add or update diagrams, assets, and linked references as needed.
+
+### 4. Run local checks before commit
+
+```bash
+python3 scripts/lint-frontmatter.py --path .
+python3 scripts/lint-mermaid.py --path .
+python3 scripts/lint-prose.py --no-exit
+make docx-validate
+make docx-render-one DOC_ID=architecture-overview
+```
+
+Replace `architecture-overview` with the manifest ID for the document you are
+actively editing.
+
+### 5. Commit with the Jira key
+
+```bash
+git add .
+git commit -m "ARCH-1234 Add reference zone model draft"
+```
+
+### 6. Push and open your pull request
+
+```bash
+git push -u origin feature/ARCH-1234-reference-zone-model
+```
+
+After that:
+
+1. Open a pull request into your team base branch.
+2. Reference the Jira ticket in the PR.
+3. Include rendered output only if your team intentionally versions deliverables.
+
+### 7. Clean up after merge
+
+```bash
+git checkout main
+git pull
+git branch -d feature/ARCH-1234-reference-zone-model
+```
+
+If your PR merged into `develop`, switch back to `develop` instead of `main`.
+
 ## Quality Tooling
 
 The starter includes a minimal baseline for:
 
-- front matter validation: `python scripts/lint-frontmatter.py --path .`
-- Mermaid fence preflight: `python scripts/lint-mermaid.py --path .`
-- Vale prose lint: `python scripts/lint-prose.py --no-exit`
+- front matter validation: `python3 scripts/lint-frontmatter.py --path .`
+- Mermaid fence preflight: `python3 scripts/lint-mermaid.py --path .`
+- Vale prose lint: `python3 scripts/lint-prose.py --no-exit`
 - markdownlint structure lint: `markdownlint .`
 
 Recommended Visual Studio Code extensions are included in `.vscode/extensions.json`.

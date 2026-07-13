@@ -46,14 +46,10 @@ From the parent directory that contains both repos:
 ```bash
 cd /projects/workspace-repos/architecture-docs-starter
 vale sync
-python scripts/lint-frontmatter.py --path .
-python scripts/lint-mermaid.py --path .
-```
-
-If your wrapper repo exposes the manifest runner:
-
-```bash
+python3 scripts/lint-frontmatter.py --path .
+python3 scripts/lint-mermaid.py --path .
 make docx-list
+make docx-validate
 make docx-render-one DOC_ID=architecture-overview
 ```
 
