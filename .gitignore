@@ -13,6 +13,7 @@ build/
 
 # Virtual environments
 .venv/
+.venv-docx-render/
 venv/
 env/
 
@@ -42,4 +43,3 @@ diagrams/exported/*.svg
 # OS
 .DS_Store
 Thumbs.db
-

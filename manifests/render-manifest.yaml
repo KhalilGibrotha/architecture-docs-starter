@@ -5,7 +5,7 @@ documents:
     rewritten_markdown: build/rewritten/example_architecture-overview.md
     assets_dir: build/diagrams/architecture-overview
     org: vars/org.yaml
-    logo: assets/logo/logo.png
+    logo: ""
 
   - id: architecture-overview-release
     input: docs/example_architecture-overview.md
@@ -13,5 +13,4 @@ documents:
     rewritten_markdown: build/rewritten/example_architecture-overview.release.md
     assets_dir: build/diagrams/architecture-overview-release
     org: vars/org.yaml
-    logo: assets/logo/logo.png
-
+    logo: ""

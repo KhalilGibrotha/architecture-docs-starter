@@ -57,7 +57,8 @@ git clone <your-org>/<this-repo>.git
 Run from the parent directory that contains both repos:
 
 ```bash
-bash dac-toolkit/scripts/build-docs.sh <this-repo>
+cd <this-repo>
+make docx-render-all
 ```
 
 This workflow expects:
@@ -66,8 +67,9 @@ This workflow expects:
 - an optional shared logo at `assets/logo/logo.png`
 - one or more render manifests under `manifests/`
 
-If you want a repository-specific local workspace flow, render through
-`dac-toolkit` wrappers and keep intermediate outputs in `build/`.
+This uses the toolkit-owned manifest wrapper through the starter `Makefile`.
+It keeps the command surface inside the content repo while still resolving the
+tooling from the sibling `dac-toolkit` clone.
 
 ### Build a single document
 
@@ -119,8 +121,9 @@ The current wrapper-friendly pattern is:
 Example selective render pattern:
 
 ```bash
-python ../dac-toolkit/ansible-devspaces-fresh/scripts/docx_manifest.py list --manifest manifests/render-manifest.yaml
-python ../dac-toolkit/ansible-devspaces-fresh/scripts/docx_manifest.py render --manifest manifests/render-manifest.yaml --document-id architecture-overview
+make docx-list
+make docx-render-one DOC_ID=architecture-overview
+make docx-render-all
 ```
 
 ## Where Things Go
@@ -211,6 +214,7 @@ Before publishing this starter for wider reuse:
 
 The starter currently includes:
 
+- `Makefile`
 - `.markdownlint.json`
 - `.vale.ini`
 - `.vscode/extensions.json`

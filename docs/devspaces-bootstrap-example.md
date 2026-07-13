@@ -53,8 +53,8 @@ python scripts/lint-mermaid.py --path .
 If your wrapper repo exposes the manifest runner:
 
 ```bash
-python /projects/ansible-devspaces/scripts/docx_manifest.py list --manifest manifests/render-manifest.yaml
-python /projects/ansible-devspaces/scripts/docx_manifest.py render --manifest manifests/render-manifest.yaml --document-id architecture-overview
+make docx-list
+make docx-render-one DOC_ID=architecture-overview
 ```
 
 ## Recommended Team Practice
@@ -64,4 +64,3 @@ python /projects/ansible-devspaces/scripts/docx_manifest.py render --manifest ma
 - update `vars/org.yaml`, `assets/logo/`, and `manifests/` in the derived repo
 - treat `build/` as disposable local output
 - commit `exports/` only when you intend to publish or review generated artifacts
-
