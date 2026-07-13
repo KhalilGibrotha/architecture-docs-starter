@@ -7,6 +7,12 @@ Generated documents such as DOCX and PDF are build artifacts, not hand-edited de
 The rendering and validation tooling lives in the separate public repo
 [`dac-toolkit`](https://github.com/KhalilGibrotha/dac-toolkit).
 
+This starter is intended to stay public-safe:
+
+- no organization-sensitive defaults
+- no internal-only taxonomy or naming
+- no customer or environment-specific examples
+
 ## Repository Structure
 
 ```text
@@ -60,6 +66,9 @@ This workflow expects:
 - an optional shared logo at `assets/logo/logo.png`
 - one or more render manifests under `manifests/`
 
+If you want a repository-specific local workspace flow, render through
+`dac-toolkit` wrappers and keep intermediate outputs in `build/`.
+
 ### Build a single document
 
 ```bash
@@ -91,6 +100,12 @@ Recommended behavior:
 - write final deliverables to `exports/` only when needed
 - do not edit generated files directly
 
+This split makes it easier for teams to:
+
+- keep routine rendering noise out of review
+- publish selected artifacts intentionally
+- preserve rewritten markdown and generated diagrams for troubleshooting
+
 ## Recommended Manifest Layout
 
 The repository includes `manifests/render-manifest.yaml` as a working example.
@@ -100,6 +115,13 @@ The current wrapper-friendly pattern is:
 - document entries with stable `id` values
 - build output routed to `build/`
 - final named exports routed to `exports/` only when intentionally desired
+
+Example selective render pattern:
+
+```bash
+python ../dac-toolkit/ansible-devspaces-fresh/scripts/docx_manifest.py list --manifest manifests/render-manifest.yaml
+python ../dac-toolkit/ansible-devspaces-fresh/scripts/docx_manifest.py render --manifest manifests/render-manifest.yaml --document-id architecture-overview
+```
 
 ## Where Things Go
 
@@ -155,12 +177,44 @@ https://github.com/<your-org>/architecture-docs-starter
 If you also clone `dac-toolkit`, keep the repos side by side so wrapper scripts
 can resolve shared tooling consistently.
 
+For a Dev Spaces wrapper repo that clones content repositories on bootstrap,
+add this starter to the clone list and keep `dac-toolkit` adjacent:
+
+```text
+https://github.com/<your-org>/architecture-docs-starter architecture-docs-starter
+https://github.com/KhalilGibrotha/dac-toolkit dac-toolkit
+```
+
+That gives authors:
+
+- starter templates in one repo
+- shared rendering tooling in another repo
+- a predictable `build/` and `exports/` model across projects
+
 ## Publishing Guidance
 
 Before publishing this starter for wider reuse:
 
 1. Replace placeholder organization values in `vars/org.yaml.example`.
-2. Add or adjust templates that reflect your preferred document taxonomy.
-3. Decide whether `exports/` should stay mostly ignored or hold formal release artifacts.
-4. Publish the repo as a template or public seed repository in your Git hosting platform.
+2. Decide whether `vars/org.yaml` should stay as a checked-in example or be
+   replaced during repository creation.
+3. Add or adjust templates that reflect your preferred document taxonomy.
+4. Decide whether `exports/` should stay mostly ignored or hold formal release artifacts.
+5. Publish the repo as a template or public seed repository in your Git hosting platform.
+6. If you maintain a Dev Spaces bootstrap repo, add this repository to its clone list.
 
+## Included Baseline Files
+
+The starter currently includes:
+
+- `.markdownlint.json`
+- `.vale.ini`
+- `.vscode/extensions.json`
+- `.vscode/settings.json`
+- `.github/workflows/lint.yml`
+- `scripts/lint-frontmatter.py`
+- `scripts/lint-mermaid.py`
+- `scripts/lint-prose.py`
+
+These are intended to be updated alongside the broader `architecture-docs`
+workflow as the shared authoring standards evolve.
