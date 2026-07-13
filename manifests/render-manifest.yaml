@@ -1,0 +1,17 @@
+documents:
+  - id: architecture-overview
+    input: docs/example_architecture-overview.md
+    output: build/docx/example_architecture-overview.docx
+    rewritten_markdown: build/rewritten/example_architecture-overview.md
+    assets_dir: build/diagrams/architecture-overview
+    org: vars/org.yaml
+    logo: assets/logo/logo.png
+
+  - id: architecture-overview-release
+    input: docs/example_architecture-overview.md
+    output: exports/example_architecture-overview.docx
+    rewritten_markdown: build/rewritten/example_architecture-overview.release.md
+    assets_dir: build/diagrams/architecture-overview-release
+    org: vars/org.yaml
+    logo: assets/logo/logo.png
+

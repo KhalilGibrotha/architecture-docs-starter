@@ -1,0 +1,16 @@
+{
+  "files.associations": {
+    "*.mmd": "markdown",
+    "*.puml": "plantuml",
+    "*.plantuml": "plantuml",
+    "*.dot": "dot",
+    "*.d2": "plaintext"
+  },
+  "markdown-preview-enhanced.codeBlockTheme": "github.css",
+  "markdown-preview-enhanced.previewTheme": "github-light.css",
+  "markdown-preview-enhanced.mermaidTheme": "default",
+  "markdown-preview-enhanced.enableScriptExecution": true,
+  "markdown.extension.preview.autoShowPreviewToSide": true,
+  "git.ignoreLimitWarning": true
+}
+

@@ -1,0 +1,61 @@
+name: Lint
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+      - master
+  push:
+    branches:
+      - develop
+      - main
+
+jobs:
+  vale:
+    name: Vale prose lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Vale
+        run: |
+          wget -qO- https://github.com/errata-ai/vale/releases/download/v3.14.0/vale_3.14.0_Linux_64-bit.tar.gz \
+            | tar -xz vale
+          sudo mv vale /usr/local/bin/
+
+      - name: Sync Vale packages
+        run: vale sync
+
+      - name: Run Vale
+        run: python scripts/lint-prose.py --no-exit
+
+  mermaid:
+    name: Mermaid preflight
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate Mermaid fences
+        run: python scripts/lint-mermaid.py --path .
+
+  frontmatter:
+    name: Front matter validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: pip install pyyaml --quiet
+
+      - name: Validate front matter
+        run: python scripts/lint-frontmatter.py --path .
+

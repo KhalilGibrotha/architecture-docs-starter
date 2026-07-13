@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Generated release artifacts
+exports/*.docx
+exports/*.pdf
+
+# Local render work area
+build/docx/
+build/rewritten/
+build/diagrams/
+build/reports/
+
+# Temporary files
+*.tmp
+*.zip
+/*.docx
+
+# Vale packages pulled by sync
+.vale/styles/RedHat/
+.vale/styles/write-good/
+
+# Rendered diagrams
+diagrams/exported/*.png
+diagrams/exported/*.svg
+
+# OS
+.DS_Store
+Thumbs.db
+
