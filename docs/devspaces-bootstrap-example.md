@@ -53,6 +53,17 @@ make docx-validate
 make docx-render-one DOC_ID=architecture-overview
 ```
 
+For a derived content repo, the minimal `Makefile` defaults are:
+
+```make
+PYTHON ?= python3
+REPO_ROOT := $(CURDIR)
+TOOLKIT_DIR ?= $(abspath $(REPO_ROOT)/../dac-toolkit)
+MANIFEST ?= manifests/render-manifest.yaml
+DOC_ID ?=
+KROKI_URL ?= http://127.0.0.1:8000
+```
+
 ## Recommended Team Practice
 
 - keep the starter public and generic

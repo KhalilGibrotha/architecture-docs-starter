@@ -83,6 +83,32 @@ make docx-validate
 make docx-render-all
 ```
 
+### Recommended Content Repo Makefile
+
+For a content repo cloned beside `dac-toolkit`, this `Makefile` pattern matches
+the working sibling-layout workflow:
+
+```make
+PYTHON ?= python3
+REPO_ROOT := $(CURDIR)
+TOOLKIT_DIR ?= $(abspath $(REPO_ROOT)/../dac-toolkit)
+MANIFEST ?= manifests/render-manifest.yaml
+DOC_ID ?=
+KROKI_URL ?= http://127.0.0.1:8000
+
+docx-list:
+	$(PYTHON) $(TOOLKIT_DIR)/scripts/docx_manifest.py list --content-root "$(REPO_ROOT)" --manifest "$(MANIFEST)"
+
+docx-validate:
+	$(PYTHON) $(TOOLKIT_DIR)/scripts/docx_manifest.py validate --content-root "$(REPO_ROOT)" --manifest "$(MANIFEST)"
+
+docx-render-all:
+	$(PYTHON) $(TOOLKIT_DIR)/scripts/docx_manifest.py render --content-root "$(REPO_ROOT)" --manifest "$(MANIFEST)" --kroki-url "$(KROKI_URL)"
+
+docx-render-one:
+	$(PYTHON) $(TOOLKIT_DIR)/scripts/docx_manifest.py render --content-root "$(REPO_ROOT)" --manifest "$(MANIFEST)" --document-id "$(DOC_ID)" --kroki-url "$(KROKI_URL)"
+```
+
 This workflow expects:
 
 - organization metadata in `vars/org.yaml`
@@ -148,6 +174,20 @@ The current wrapper-friendly pattern is:
 - document entries with stable `id` values
 - build output routed to `build/`
 - final named exports routed to `exports/` only when intentionally desired
+
+The fully explicit entry form is also valid and often preferable for larger
+content repositories:
+
+```yaml
+documents:
+  - id: architecture-overview
+    input: docs/example_architecture-overview.md
+    output: exports/example_architecture-overview.docx
+    rewritten_markdown: source/docs/example_architecture-overview.md
+    assets_dir: build/diagrams/example_architecture-overview
+    org: vars/org.yaml
+    logo: assets/logo/logo.png
+```
 
 Example selective render pattern:
 
